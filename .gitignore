@@ -1,0 +1,21 @@
+.env
+
+# Django 
+*.log
+*.pot
+*.pyc
+__pycache__
+
+
+# Python 
+*.py[cod] 
+*$py.class 
+
+# Environments 
+*venv
+
+# VS Code 
+.vscode/*
+
+# Others
+db.sqlite3
