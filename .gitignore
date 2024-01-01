@@ -19,3 +19,5 @@ __pycache__
 
 # Others
 db.sqlite3
+.coverage
+htmlcov

@@ -21,6 +21,8 @@ class Post(models.Model):
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     status = models.CharField(max_length=10, choices=[('draft', 'Draft'), ('published', 'Published')], default='published')
+    objects = models.Manager()
+    post_objects = PostObjects()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
 
 
