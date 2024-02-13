@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
-    <h1 class="text-center fw-bold my-4">Latest Posts</h1>
+  <section class="container min-vh-100-wfooter">
+    <h1 class="text-center fw-bold py-5">Latest Posts</h1>
     <Post v-if="!loading" :posts="posts" />
     <PostLoading v-else />
-  </div>
+  </section>
 </template>
 
 <script setup>
@@ -21,7 +21,7 @@
       const response = await axios.get(apiUrl)
       posts.value = response.data
     } catch (error) {
-      console.error(error)
+      console.error('Error fetching data:', error)
     } finally {
       loading.value = false
     }

@@ -5,7 +5,7 @@
     >
       <div class="container-fluid py-1">
         <!-- Name/Logo -->
-        <a href="#" class="navbar-brand fw-bold fs-4 ps-3">Blog.<span class="text-primary">Dev</span></a>
+        <router-link to="/" class="navbar-brand fw-bold fs-4 ps-3">Blog.<span class="text-primary">Dev</span></router-link>
         <!-- Toggle Button -->
         <button 
           class="navbar-toggler shadow-none border-0"
@@ -28,15 +28,19 @@
           <div 
             class="container-fluid offcanvas-header">
             <h5 class="offcanvas-title fs-4 fw-bold" id="offcanvasNavbarLabel">
-              nicds.
-              <span class="text-blue">dev</span>
+              Blog.
+              <span class="text-primary">Dev</span>
             </h5>
             <button 
               type="button" 
-              class="btn-close btn-close-white shadow-none" 
+              class="btn-close shadow-none" 
               data-bs-dismiss="offcanvas" aria-label="Close"
             ></button>
           </div>
+          <form class="container-fluid d-flex justify-content-end">
+            <router-link to="/log-in" class="btn btn-outline-primary me-2">Login</router-link>
+            <router-link to="/sign-up" class="btn btn-outline-primary">Sign Up</router-link>
+          </form>
         </div>
       </div>
     </nav>
