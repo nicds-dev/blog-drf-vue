@@ -7,28 +7,24 @@
 </template>
 
 <script setup>
-  import axios from 'axios'
+  import { ref, onMounted } from 'vue'
   import Post from '@/components/Post.vue'
   import PostLoading from '@/components/PostLoading.vue'
-  import { ref, onMounted } from 'vue'
+  import axiosInstance from '../axios.js';
 
-  const apiUrl = ref('http://localhost:8000/api/')
   const posts = ref([])
   const loading = ref(true)
 
-  const fetchData = async (apiUrl) => {
-    try {
-      const response = await axios.get(apiUrl)
-      posts.value = response.data
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    } finally {
-      loading.value = false
-    }
-  }
-
   onMounted(() => {
-    fetchData(apiUrl.value);
+    axiosInstance.get('')
+      .then((res) => {
+        posts.value = res.data
+        loading.value = false
+        console.log("Posts: ", res.data)
+      })
+      .catch((error) => {
+        console.error("Error during fetching posts:", error)
+      })
   })
 
 </script>

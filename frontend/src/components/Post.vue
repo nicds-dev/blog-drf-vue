@@ -1,5 +1,5 @@
 <template>
-    <section id="posts" class="container py-6">
+    <section id="posts" class="container">
         <div v-if="posts.length === 0" class="alert alert-warning text-center" role="alert">
             No posts yet
         </div>

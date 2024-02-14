@@ -40,6 +40,7 @@
           <form class="container-fluid d-flex justify-content-end">
             <router-link to="/log-in" class="btn btn-outline-primary me-2">Login</router-link>
             <router-link to="/sign-up" class="btn btn-outline-primary">Sign Up</router-link>
+            <router-link to="/log-out" class="btn btn-outline-primary ms-2">Logout</router-link>
           </form>
         </div>
       </div>
