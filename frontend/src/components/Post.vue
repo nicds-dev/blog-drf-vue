@@ -6,10 +6,12 @@
         <div v-else class="row row-cols-1 row-cols-md-4 g-4">
             <div v-for="post in posts" :key="post.id" class="col">
                 <div class="card h-100">
-                    <img src="https://source.unsplash.com/300x200" alt="" class="card-img-top">
+                    <a :href="`post/${post.slug}`">
+                        <img src="https://source.unsplash.com/300x200" alt="" class="card-img-top">
+                    </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text">{{ post.content }}</p>
+                        <p class="card-text text-truncate">{{ post.content }}</p>
                     </div>
                 </div>
             </div>

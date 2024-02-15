@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import SignUp from '../views/SignUp.vue'
 import LogIn from '../views/LogIn.vue'
 import LogOut from '../views/LogOut.vue'
+import PostDetail from '../views/PostDetail.vue'
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     path: '/log-out',
     name: 'logOut',
     component: LogOut
+  },
+  {
+    path: '/post/:slug',
+    name: 'postDetail',
+    component: PostDetail
   }
 ]
 
