@@ -4,6 +4,7 @@ import SignUp from '../views/SignUp.vue'
 import LogIn from '../views/LogIn.vue'
 import LogOut from '../views/LogOut.vue'
 import PostDetail from '../views/PostDetail.vue'
+import SearchView from '../views/SearchView.vue'
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     path: '/post/:slug',
     name: 'postDetail',
     component: PostDetail
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: SearchView,
   }
 ]
 

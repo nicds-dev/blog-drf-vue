@@ -38,6 +38,10 @@
             ></button>
           </div>
           <form class="container-fluid d-flex justify-content-end">
+              <input
+                v-model="searchText" type="text" class="form-control me-2" placeholder="Search..." aria-label="Search"
+              />
+              <button @click.prevent="goSearch" class="btn btn-outline-primary me-2">Search</button>
             <router-link to="/log-in" class="btn btn-outline-primary me-2">Login</router-link>
             <router-link to="/sign-up" class="btn btn-outline-primary">Sign Up</router-link>
             <router-link to="/log-out" class="btn btn-outline-primary ms-2">Logout</router-link>
@@ -47,8 +51,22 @@
     </nav>
 </template>
   
-<script>
+<script setup>
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
 
+  const router = useRouter()
+  const searchText = ref('')
+
+  const goSearch = () => {
+    if(searchText.value.trim() !== '') {
+      router.push({ 
+        path: '/search/',
+        query: { search: searchText.value }
+      })
+      searchText.value = '';
+    }
+  }
 </script>
   
 <style scoped>
