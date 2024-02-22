@@ -1,6 +1,6 @@
 <template>
-  <section class="container min-vh-100-wfooter">
-    <h1 class="text-center fw-bold py-5">Search Results for "{{ query }}"</h1>
+  <section class="container vh-70">
+    <h1 class="text-center fw-bold mt-5">Search Results for "{{ query }}"</h1>
     <Post v-if="!loading" :posts="posts" />
     <PostLoading v-else />
   </section>

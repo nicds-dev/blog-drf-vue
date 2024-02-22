@@ -3,6 +3,21 @@
     padding-top: 5.4rem;
     padding-bottom: 5.4rem;
 }
-.min-vh-100-wfooter {
-    min-height: calc(100vh - 150px);
+.vh-70 {
+    min-height: 71vh;
+}
+.mw-400 {
+    max-width: 400px !important;
+}
+.mw-700 {
+    max-width: 700px !important;
+}
+.custom-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+.custom-link:hover {
+    color: #007bff;
+    text-decoration: underline;
 }

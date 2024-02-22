@@ -1,49 +1,46 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import SignUp from '../views/SignUp.vue'
-import LogIn from '../views/LogIn.vue'
-import LogOut from '../views/LogOut.vue'
-import PostDetail from '../views/PostDetail.vue'
-import SearchView from '../views/SearchView.vue'
+import HomeView from '@/views/HomeView.vue'
+import SignUp from '@/views/auth/SignUp.vue'
+import LogIn from '@/views/auth/LogIn.vue'
+import LogOut from '@/views/auth/LogOut.vue'
+import PostDetail from '@/views/PostDetail.vue'
+import SearchView from '@/views/SearchView.vue'
+import Admin from '@/views/Admin.vue'
+import Create from '@/views/admin/Create.vue'
+import Update from '@/views/admin/Update.vue'
+import Delete from '@/views/admin/Delete.vue'
+
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/', name: 'home', component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/admin', name: 'admin', component: Admin
   },
   {
-    path: '/sign-up',
-    name: 'signUp',
-    component: SignUp
+    path: '/admin/create', name: 'create', component: Create
   },
   {
-    path: '/log-in',
-    name: 'logIn',
-    component: LogIn
+    path: '/admin/update/:id', name: 'update', component: Update
   },
   {
-    path: '/log-out',
-    name: 'logOut',
-    component: LogOut
+    path: '/admin/delete/:id', name: 'delete', component: Delete
   },
   {
-    path: '/post/:slug',
-    name: 'postDetail',
-    component: PostDetail
+    path: '/sign-up', name: 'signUp', component: SignUp
   },
   {
-    path: '/search',
-    name: 'search',
-    component: SearchView,
+    path: '/log-in', name: 'logIn', component: LogIn
+  },
+  {
+    path: '/log-out', name: 'logOut', component: LogOut
+  },
+  {
+    path: '/post/:slug', name: 'postDetail', component: PostDetail
+  },
+  {
+    path: '/search', name: 'search', component: SearchView,
   }
 ]
 

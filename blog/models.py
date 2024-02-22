@@ -15,7 +15,7 @@ class Post(models.Model):
             return super().get_queryset().filter(status='published')
 
     title = models.CharField(max_length=250)
-    excerpt = models.TextField(null=True)
+    excerpt = models.TextField(null=False)
     content = models.TextField()
     slug = models.SlugField(max_length=250, unique_for_date='published')
     published = models.DateTimeField(default=timezone.now)

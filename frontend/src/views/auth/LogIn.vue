@@ -1,7 +1,7 @@
 <template>
-    <section class="container min-vh-100-wfooter">
-        <h1 class="fs-2 text-center fw-bold py-5">Sign In</h1>
-        <div class="row justify-content-center px-4">
+    <section class="container vh-70">
+        <h1 class="fs-2 text-center fw-bold mt-5">Sign In</h1>
+        <div class="row justify-content-center my-5 px-4">
             <div class="mw-400 card">
                 <div class="card-body">
                     <form @submit.prevent="login">
@@ -40,7 +40,7 @@
 <script setup>
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import axiosInstance from '../axios.js'
+    import axiosInstance from '@/axios.js'
 
     const formData = ref({
         email: '',
@@ -78,5 +78,4 @@
                 console.error("Error during login:", error)
             })
     }
-
 </script>

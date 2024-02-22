@@ -1,14 +1,14 @@
 <template>
   <section class="container vh-70">
     <h1 class="text-center fw-bold mt-5">Latest Posts</h1>
-    <Post v-if="!loading" :posts="posts" />
+    <PostAdmin v-if="!loading" :posts="posts" />
     <PostLoading v-else />
   </section>
 </template>
-
+  
 <script setup>
   import { ref, onMounted } from 'vue'
-  import Post from '@/components/Post.vue'
+  import PostAdmin from '@/components/PostAdmin.vue'
   import PostLoading from '@/components/PostLoading.vue'
   import axiosInstance from '@/axios.js';
 
@@ -26,5 +26,5 @@
         console.error("Error during fetching posts:", error)
       })
   })
-
 </script>
+  

@@ -1,7 +1,7 @@
 <template>
-    <section class="container min-vh-100-wfooter">
-        <h1 class="text-center fw-semibold py-5">{{ post.title }}</h1>
-        <p class="text-start">{{ post.excerpt }}</p>
+    <section class="container vh-70">
+        <h1 class="text-center fw-semibold mt-5">{{ post.title }}</h1>
+        <p class="text-start my-5">{{ post.excerpt }}</p>
         <p class="text-end fw-medium">Published at: <span class="fw-normal">{{ post.published }}</span></p>
     </section>
 </template>
@@ -15,7 +15,7 @@
 
     onMounted(() => {
         const { slug } = useRoute().params
-        axiosInstance.get(slug)
+        axiosInstance.get(`post/${slug}`)
             .then((res) => {
                 post.value = res.data
                 console.log("Post: ", res.data)
