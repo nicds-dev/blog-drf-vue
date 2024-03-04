@@ -7,7 +7,7 @@
             <div v-for="post in posts" :key="post.id" class="col">
                 <div class="card h-100">
                     <a :href="`/post/${post.slug}`">
-                        <img src="https://source.unsplash.com/300x200" alt="" class="card-img-top">
+                        <img :src="post.image" alt="" class="card-img-top">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">{{ post.title }}</h5>

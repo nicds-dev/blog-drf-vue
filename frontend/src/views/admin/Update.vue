@@ -8,35 +8,47 @@
             <div class="form-group mt-3">
               <label for="title" class="fw-medium">Post Title *</label>
               <input
-                v-model="formData.title"
+                v-model="initFormData.title"
                 @input="updateSlug"
                 type="text"
                 class="form-control"
                 id="title"
+                required
+              />
+            </div>
+            <div class="form-group mt-3">
+              <label for="image" class="fw-medium">Post Image *</label>
+              <input
+                @change="handleImageChange"
+                class="form-control"
+                type="file"
+                id="image"
               />
             </div>
             <div class="form-group mt-3">
               <label for="excerpt">Post Excerpt *</label>
               <textarea
-                v-model="formData.excerpt"
+                v-model="initFormData.excerpt"
                 class="form-control"
                 id="excerpt"
                 rows="4"
+                required
               ></textarea>
             </div>
             <div class="form-group mt-3">
               <label for="slug">Slug *</label>
               <input
-                v-model="formData.slug"
+                v-model="initFormData.slug"
                 type="text"
                 class="form-control"
                 id="slug"
+                required
               />
             </div>
             <div class="form-group mt-3">
               <label for="content">Content *</label>
               <textarea
-                v-model="formData.content"
+                v-model="initFormData.content"
                 class="form-control"
                 id="content"
                 rows="4"
@@ -60,30 +72,34 @@
   const router = useRouter()
   const id = router.currentRoute.value.params.id
   
-  const formData = ref({
+  const initFormData = ref({
     id: '',
     title: '',
     slug: '',
     excerpt: '',
     content: '',
   })
+  const postImage = ref(null)
 
   onBeforeMount(() => {
     axiosInstance.get(`admin/update/detail/${id}`)
       .then((res) => {
-        formData.value.id = res.data.id
-        formData.value.title = res.data.title
-        formData.value.slug = res.data.slug
-        formData.value.excerpt = res.data.excerpt
-        formData.value.content = res.data.content
+        initFormData.value.id = res.data.id
+        initFormData.value.title = res.data.title
+        initFormData.value.slug = res.data.slug
+        initFormData.value.excerpt = res.data.excerpt
+        initFormData.value.content = res.data.content
       })
       .catch((error) => {
         console.error("Error during fetching post:", error)
+        if (error.response) {
+          console.error("Error response:", error.response.data)
+        }
       })
   })
   
   const updateSlug = () => {
-    formData.value.slug = formData.value.title
+    initFormData.value.slug = initFormData.value.title
       .toLowerCase()
       .normalize("NFD")
       .replace(/&+/g, 'and')
@@ -92,21 +108,34 @@
       .replace(/^-+|-+$/g, '')
   }
 
+  const handleImageChange = (e) => {
+    postImage.value = e.target.files[0]
+  }
+
   const updatePost = () => {
-    axiosInstance
-      .put(`admin/update/${id}`, {
-        title: formData.value.title.trim(),
-        slug: formData.value.slug.trim(),
-        author: 1,
-        excerpt: formData.value.excerpt.trim(),
-        content: formData.value.content.trim(),
-      })
+    const formData = new FormData()
+    formData.append('title', initFormData.value.title)
+    formData.append('slug', initFormData.value.slug)
+    formData.append('excerpt', initFormData.value.excerpt)
+    formData.append('content', initFormData.value.content)
+    if (postImage.value) {
+      formData.append('image', postImage.value)
+    }
+
+    axiosInstance.put(`admin/update/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
       .then((res) => {
         console.log('Post updated:', res)
         router.push('/admin/')
       })
       .catch((error) => {
         console.error("Error during post update:", error)
+        if (error.response) {
+          console.error("Error response:", error.response.data)
+        }
       })
   }
 </script>

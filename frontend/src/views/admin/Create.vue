@@ -8,35 +8,52 @@
             <div class="form-group mt-3">
               <label for="title" class="fw-medium">Post Title *</label>
               <input
-                v-model="formData.title"
+                @change="handleChange"
+                v-model="initFormData.title"
                 @input="updateSlug"
                 type="text"
                 class="form-control"
                 id="title"
+                required
+              />
+            </div>
+            <div class="form-group mt-3">
+              <label for="image" class="fw-medium">Post Image *</label>
+              <input
+                @change="handleChange"
+                class="form-control"
+                type="file"
+                id="image"
+                required
               />
             </div>
             <div class="form-group mt-3">
               <label for="excerpt">Post Excerpt *</label>
               <textarea
-                v-model="formData.excerpt"
+                @change="handleChange"
+                v-model="initFormData.excerpt"
                 class="form-control"
                 id="excerpt"
                 rows="4"
+                required
               ></textarea>
             </div>
             <div class="form-group mt-3">
               <label for="slug">Slug *</label>
               <input
-                v-model="formData.slug"
+                @change="handleChange"
+                v-model="initFormData.slug"
                 type="text"
                 class="form-control"
                 id="slug"
+                required
               />
             </div>
             <div class="form-group mt-3">
               <label for="content">Content *</label>
               <textarea
-                v-model="formData.content"
+                @change="handleChange"
+                v-model="initFormData.content"
                 class="form-control"
                 id="content"
                 rows="4"
@@ -59,15 +76,16 @@
 
   const router = useRouter()
   
-  const formData = ref({
+  const initFormData = ref({
     title: '',
     slug: '',
     excerpt: '',
     content: '',
   })
+  const postImage = ref(null)
 
   const updateSlug = () => {
-    formData.value.slug = formData.value.title
+    initFormData.value.slug = initFormData.value.title
       .toLowerCase()
       .normalize("NFD")
       .replace(/&+/g, 'and')
@@ -76,21 +94,35 @@
       .replace(/^-+|-+$/g, '')
   }
 
+  const handleChange = (e) => {
+    if (e.target.id === 'image') {
+      postImage.value = e.target.files[0]
+    } else {
+      initFormData.value[e.target.id] = e.target.value.trim()
+    }
+  }
+
   const submitPost = () => {
-    axiosInstance
-      .post('admin/create', {
-        title: formData.value.title.trim(),
-        slug: formData.value.slug.trim(),
-        author: 1,
-        excerpt: formData.value.excerpt.trim(),
-        content: formData.value.content.trim(),
-      })
+    const formData = new FormData()
+    formData.append('title', initFormData.value.title)
+    formData.append('image', postImage.value)
+    formData.append('slug', initFormData.value.slug)
+    formData.append('excerpt', initFormData.value.excerpt)
+    formData.append('content', initFormData.value.content)
+    axiosInstance.post('admin/create', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
       .then((res) => {
         console.log('Post created:', res)
         router.push('/admin/')
       })
       .catch((error) => {
         console.error("Error during post creation:", error)
+        if (error.response) {
+          console.error("Error response:", error.response.data)
+        }
       })
   }
 </script>

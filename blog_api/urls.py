@@ -1,4 +1,3 @@
-# from rest_framework.routers import DefaultRouter
 from .views import PostList, PostDetail, PostListDetailFilter, CreatePost, DetailPost, UpdatePost, DeletePost
 from django.urls import path
 
@@ -15,8 +14,3 @@ urlpatterns = [
     path('admin/delete/<int:pk>', DeletePost.as_view(), name='deletepost'),
 ]
 
-
-# router = DefaultRouter()
-# router.register('', PostList, basename='post')
-
-# urlpatterns = router.urls
