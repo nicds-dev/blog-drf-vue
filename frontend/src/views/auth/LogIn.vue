@@ -40,7 +40,7 @@
 <script setup>
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import axiosInstance from '@/axios.js'
+    import axiosInstance from '@/interceptors/axios'
 
     const formData = ref({
         email: '',

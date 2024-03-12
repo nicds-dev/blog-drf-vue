@@ -11,7 +11,7 @@
   import { useRoute } from 'vue-router'
   import Post from '@/components/Post.vue'
   import PostLoading from '@/components/PostLoading.vue'
-  import axiosInstance from '../axios.js'
+  import axiosInstance from '@/interceptors/axios'
 
   const route = useRoute()
   const loading = ref(true)

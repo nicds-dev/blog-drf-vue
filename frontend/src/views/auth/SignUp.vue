@@ -10,6 +10,7 @@
                             <input
                                 type="email"
                                 class="form-control"
+                                :class="{ 'is-invalid': errorField === 'email' }"
                                 v-model="formData.email"
                                 @input="signUpChange('email')"
                                 required
@@ -20,6 +21,7 @@
                             <input
                                 type="text"
                                 class="form-control"
+                                :class="{ 'is-invalid': errorField === 'username' }"
                                 v-model="formData.username"
                                 @input="signUpChange('username')"
                                 required
@@ -30,6 +32,7 @@
                             <input
                                 type="password"
                                 class="form-control"
+                                :class="{ 'is-invalid': errorField === 'password' }"
                                 v-model="formData.password"
                                 @input="signUpChange('password')"
                                 required
@@ -42,6 +45,9 @@
                             Already have an account?
                             <router-link to="/log-in" class="text-decoration-none">Sign in</router-link>
                         </div>
+                        <div v-if="errorMessage" class="alert alert-danger mt-3" role="alert">
+                            {{ errorMessage }}
+                        </div>
                     </form>
                 </div>
             </div>
@@ -52,9 +58,11 @@
 <script setup>
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import axiosInstance from '@/axios.js'
+    import axiosInstance from '@/interceptors/axios'
 
     const router = useRouter()
+    const errorField = ref(null);
+    const errorMessage = ref(null);
 
     const formData = ref({
         email: '',
@@ -69,22 +77,50 @@
         }
     }
 
-    const signUp = () => {
-        console.log("Sign up form data:", formData.value)
+    const signUp = async () => {
+        if (!formData.value.email || !formData.value.username || !formData.value.password) {
+            showError('Please fill in all fields.')
+            return
+        }
 
-        axiosInstance
-            .post('user/register/', {
+        try {
+            const response = await axiosInstance.post('user/register/', {
                 email: formData.value.email,
                 user_name: formData.value.username,
                 password: formData.value.password,
             })
-            .then((res) => {
-                console.log('User created:', res)
-                router.push('/log-in')
-            })
-            .catch((error) => {
-                console.error("Error during user creation:", error)
-            })
+            router.push('/log-in')
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 400 && error.response.data) {
+                    if (error.response.data.email && error.response.data.email.length > 0) {
+                        showError('email', 'An account with this email already exists.')
+                    } else if (error.response.data.user_name && error.response.data.user_name.length > 0) {
+                        showError('username', 'An account with this username already exists.')
+                    } else if (error.response.data.password && error.response.data.password.length > 0) {
+                       error.response.data.password.forEach((errorMessage) => {
+                           showError('password', errorMessage)
+                       })
+                    } else {
+                        showError(null, 'An error occurred while signing up. Please try again. 1')
+                    }
+                } else {
+                    showError(null, 'An error occurred while signing up. Please try again. 2')
+                }
+            } else {
+                showError(null, 'An error occurred while signing up. Please try again. 3')
+            }
+        }
+    }
+
+    const showError = (field, message) => {
+        errorField.value = field
+        
+        if (field === 'password' && Array.isArray(message)) {
+            errorMessage.value = message
+        } else {
+            errorMessage.value = message
+            
+        }
     }
 </script>
-  

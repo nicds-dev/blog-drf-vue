@@ -10,7 +10,7 @@
   import { ref, onMounted } from 'vue'
   import Post from '@/components/Post.vue'
   import PostLoading from '@/components/PostLoading.vue'
-  import axiosInstance from '@/axios.js';
+  import axiosInstance from '@/interceptors/axios';
 
   const posts = ref([])
   const loading = ref(true)

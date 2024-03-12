@@ -12,7 +12,7 @@
 <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import axiosInstance from '@/axios'
+  import axiosInstance from '@/interceptors/axios'
 
   const router = useRouter()
   const id = router.currentRoute.value.params.id

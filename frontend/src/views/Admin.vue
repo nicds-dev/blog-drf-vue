@@ -5,12 +5,12 @@
     <PostLoading v-else />
   </section>
 </template>
-  
+
 <script setup>
   import { ref, onMounted } from 'vue'
   import PostAdmin from '@/components/PostAdmin.vue'
   import PostLoading from '@/components/PostLoading.vue'
-  import axiosInstance from '@/axios.js';
+  import axiosInstance from '@/interceptors/axios';
 
   const posts = ref([])
   const loading = ref(true)
@@ -27,4 +27,3 @@
       })
   })
 </script>
-  

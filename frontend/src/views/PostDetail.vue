@@ -9,7 +9,7 @@
 <script setup>
     import { useRoute } from 'vue-router'
     import { ref, onMounted } from 'vue'
-    import axiosInstance from '../axios.js'
+    import axiosInstance from '@/interceptors/axios'
 
     const post = ref({})
 
