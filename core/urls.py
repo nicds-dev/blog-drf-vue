@@ -13,7 +13,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('blog_api.urls', namespace='blog_api')),
     path('api/user/', include('users.urls', namespace='users')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')), # for login and logout through UI drf
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')), # login and logout through UI drf
 ]
 
 

@@ -12,7 +12,6 @@
                                 class="form-control"
                                 v-model.trim="formData.email"
                                 @input="loginChange('email')"
-                                required
                             />
                         </div>
                         <div class="form-group mt-3">
@@ -29,6 +28,9 @@
                         <div class="mt-3">
                             Don't have an account?
                             <router-link to="/sign-up" class="text-decoration-none">Sign up</router-link>
+                        </div>
+                        <div v-if="errorMessage" class="alert alert-danger mt-3" role="alert">
+                            {{ errorMessage }}
                         </div>
                     </form> 
                 </div>
@@ -48,6 +50,7 @@
     })
 
     const router = useRouter()
+    const errorMessage = ref(null)
 
     const loginChange = (field) => (e) => {
         formData.value = {
@@ -56,26 +59,29 @@
         }
     }
 
-    const login = () => {
-        console.log("Login form data:", formData.value)
+    const login = async () => {
+        if (!formData.value.email || !formData.value.password) {
+            errorMessage.value = 'Please fill in all fields.'
+            return
+        }
 
-        axiosInstance
-            .post('token/', {
+        try {
+            const response = await axiosInstance.post('token/', {
                 email: formData.value.email,
                 password: formData.value.password,
             })
-            .then((res) => {
-                console.log('User logged in:', res)
+            localStorage.setItem('access_token', response.data.access)
+            localStorage.setItem('refresh_token', response.data.refresh)
+            axiosInstance.defaults.headers['Authorization'] =
+                'JWT ' + localStorage.getItem('access_token')
 
-                localStorage.setItem('access_token', res.data.access)
-                localStorage.setItem('refresh_token', res.data.refresh)
-                axiosInstance.defaults.headers['Authorization'] =
-                    'JWT ' + localStorage.getItem('access_token')
-
-                router.push('/')
-            })
-            .catch((error) => {
-                console.error("Error during login:", error)
-            })
+            router.push('/')
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+                errorMessage.value = 'Invalid email or password. Please try again.'
+            } else {
+                errorMessage.value = 'An error occurred while logging in. Please try again.'
+            }
+        }
     }
 </script>

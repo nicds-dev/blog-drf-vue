@@ -61,8 +61,8 @@
     import axiosInstance from '@/interceptors/axios'
 
     const router = useRouter()
-    const errorField = ref(null);
-    const errorMessage = ref(null);
+    const errorField = ref(null)
+    const errorMessage = ref(null)
 
     const formData = ref({
         email: '',
@@ -102,13 +102,13 @@
                            showError('password', errorMessage)
                        })
                     } else {
-                        showError(null, 'An error occurred while signing up. Please try again. 1')
+                        showError(null, 'An error occurred while signing up. Please try again.')
                     }
                 } else {
-                    showError(null, 'An error occurred while signing up. Please try again. 2')
+                    showError(null, 'An error occurred while signing up. Please try again.')
                 }
             } else {
-                showError(null, 'An error occurred while signing up. Please try again. 3')
+                showError(null, 'An error occurred while signing up. Please try again.')
             }
         }
     }

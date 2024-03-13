@@ -17,10 +17,15 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
-            try:
-                validate_password(password)
-            except ValidationError as error:
-                raise serializers.ValidationError({'password': error.messages})
+            self._validate_password(password)
             instance.set_password(password)
         instance.save()
         return instance
+
+    def _validate_password(self, password):
+        try:
+            validate_password(password)
+            if len(set(password.lower())) <= 4:
+                raise ValidationError('Password must contain at least 5 unique characters')
+        except ValidationError as err:
+            raise serializers.ValidationError({'password': err.messages})
