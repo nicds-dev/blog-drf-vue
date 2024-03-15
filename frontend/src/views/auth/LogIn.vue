@@ -29,8 +29,8 @@
                             Don't have an account?
                             <router-link to="/sign-up" class="text-decoration-none">Sign up</router-link>
                         </div>
-                        <div v-if="errorMessage" class="alert alert-danger mt-3" role="alert">
-                            {{ errorMessage }}
+                        <div v-if="authStore.errorMessage" class="alert alert-danger mt-3" role="alert">
+                            {{ authStore.errorMessage }}
                         </div>
                     </form> 
                 </div>
@@ -42,7 +42,7 @@
 <script setup>
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import axiosInstance from '@/interceptors/axios'
+    import { useAuthStore } from '@/stores/auth'
 
     const formData = ref({
         email: '',
@@ -50,7 +50,7 @@
     })
 
     const router = useRouter()
-    const errorMessage = ref(null)
+    const authStore = useAuthStore()
 
     const loginChange = (field) => (e) => {
         formData.value = {
@@ -61,27 +61,18 @@
 
     const login = async () => {
         if (!formData.value.email || !formData.value.password) {
-            errorMessage.value = 'Please fill in all fields.'
+            authStore.errorMessage = 'Please fill in all fields.'
             return
         }
-
+        
         try {
-            const response = await axiosInstance.post('token/', {
-                email: formData.value.email,
-                password: formData.value.password,
-            })
-            localStorage.setItem('access_token', response.data.access)
-            localStorage.setItem('refresh_token', response.data.refresh)
-            axiosInstance.defaults.headers['Authorization'] =
-                'JWT ' + localStorage.getItem('access_token')
-
-            router.push('/')
-        } catch (error) {
-            if (error.response && error.response.status === 401) {
-                errorMessage.value = 'Invalid email or password. Please try again.'
-            } else {
-                errorMessage.value = 'An error occurred while logging in. Please try again.'
+            await authStore.login(formData.value.email, formData.value.password)
+            
+            if (authStore.isAuthenticated) {
+                router.push('/')
             }
+        } catch (error) {
+           authStore.errorMessage = 'An error occurred while sending the request. Please try again.'
         }
     }
 </script>
