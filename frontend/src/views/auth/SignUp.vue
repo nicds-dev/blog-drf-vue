@@ -93,8 +93,16 @@
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 400 && error.response.data) {
+                    console.log(error.response.data.email)
+                    console.log(error.response.data.user_name)
+                    
                     if (error.response.data.email && error.response.data.email.length > 0) {
-                        showError('email', 'An account with this email already exists.')
+                        showError('email', 
+                            error.response.data.email[0] === 'new user with this email address already exists.'
+                            ? 'An account with this email already exists.'
+                            : error.response.data.email[0]
+                        )
+                        
                     } else if (error.response.data.user_name && error.response.data.user_name.length > 0) {
                         showError('username', 'An account with this username already exists.')
                     } else if (error.response.data.password && error.response.data.password.length > 0) {
@@ -108,7 +116,7 @@
                     showError(null, 'An error occurred while signing up. Please try again.')
                 }
             } else {
-                showError(null, 'An error occurred while signing up. Please try again.')
+                showError(null, 'An error occurred. Please try again.')
             }
         }
     }

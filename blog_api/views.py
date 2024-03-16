@@ -37,6 +37,13 @@ class PostListDetailFilter(generics.ListAPIView):
 
 
 # Admin Post Views
+class ListPost(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Post.objects.filter(author=self.request.user)
+
 class CreatePost(APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]

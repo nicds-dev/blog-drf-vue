@@ -14,10 +14,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="post in posts" :key="post.id">
+          <tr v-for="post in visiblePosts" :key="post.id">
             <td scope="row">{{ post.id }}</td>
             <td>{{ post.category }}</td>
-            <td>
+            <td class="title-column">
               <router-link :to="`/post/${post.slug}`" class="custom-link">
                 {{ post.title }}
               </router-link>
@@ -37,6 +37,17 @@
           </tr>
         </tbody>
       </table>
+
+      <div class="d-flex justify-content-between">
+        <div>
+          <button @click="previousPage" :disabled="currentPage === 1" class="btn btn-outline-secondary">Previous</button>
+          <button @click="nextPage" :disabled="currentPage === totalPages" class="btn btn-outline-secondary ms-2">Next</button>
+        </div>
+        <div>
+          <span>{{ startIndex + 1 }} - {{ endIndex }} of {{ props.posts.length }}</span>
+        </div>
+      </div>
+
       <div class="ms-auto mt-3">
         <router-link to="/admin/create" class="btn btn-primary">New Post</router-link>
       </div>
@@ -45,5 +56,29 @@
 </template>
 
 <script setup>
+  import { ref, computed } from 'vue'
+
   const props = defineProps(['posts'])
+
+  const currentPage = ref(1)
+  const pageSize = 2
+
+  const startIndex = computed(() => (currentPage.value - 1) * pageSize)
+  const endIndex = computed(() => Math.min(startIndex.value + pageSize, props.posts.length))
+
+  const visiblePosts = computed(() => props.posts.slice(startIndex.value, endIndex.value))
+
+  const previousPage = () => {
+    if (currentPage.value > 1) {
+      currentPage.value--
+    }
+  }
+
+  const nextPage = () => {
+    if (currentPage.value < totalPages.value) {
+      currentPage.value++
+    }
+  }
+
+  const totalPages = computed(() => Math.ceil(props.posts.length / pageSize))
 </script>

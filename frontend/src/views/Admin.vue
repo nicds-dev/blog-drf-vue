@@ -1,6 +1,6 @@
 <template>
   <section class="container vh-70">
-    <h1 class="text-center fw-bold mt-5">Latest Posts</h1>
+    <h1 class="fs-2 text-center fw-bold mt-5">Your Posts</h1>
     <PostAdmin v-if="!loading" :posts="posts" />
     <PostLoading v-else />
   </section>
@@ -16,7 +16,7 @@
   const loading = ref(true)
 
   onMounted(() => {
-    axiosInstance.get('')
+    axiosInstance.get('admin/list')
       .then((res) => {
         posts.value = res.data
         loading.value = false

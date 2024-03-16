@@ -1,3 +1,10 @@
+.title-column {
+    max-width: 370px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /*--------- Extra Bootstrap ---------*/
 .py-6 {
     padding-top: 5.4rem;

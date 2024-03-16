@@ -10,6 +10,7 @@
                             <input
                                 type="email"
                                 class="form-control"
+                                :class="{ 'is-invalid': authStore.errorMessage }"
                                 v-model.trim="formData.email"
                                 @input="loginChange('email')"
                             />
@@ -19,6 +20,7 @@
                             <input
                                 type="password"
                                 class="form-control"
+                                :class="{ 'is-invalid': authStore.errorMessage }"
                                 v-model.trim="formData.password"
                                 @input="loginChange('password')"
                                 required
@@ -40,7 +42,7 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useAuthStore } from '@/stores/auth'
 
@@ -75,4 +77,8 @@
            authStore.errorMessage = 'An error occurred while sending the request. Please try again.'
         }
     }
+    onMounted(() => {
+        // Reset error message on component mount
+        authStore.errorMessage = null
+    })
 </script>
