@@ -18,6 +18,20 @@
               />
             </div>
             <div class="form-group mt-3">
+              <label for="category" class="fw-medium">Post Category *</label>
+              <select
+                @change="handleChange"
+                v-model="initFormData.category"
+                class="form-select"
+                id="category"
+                required
+              >
+                <option v-for="category in categories" :key="category.id" :value="category.id">
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group mt-3">
               <label for="image" class="fw-medium">Post Image *</label>
               <input
                 @change="handleChange"
@@ -70,14 +84,23 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import axiosInstance from '@/interceptors/axios'
   import { useRouter } from 'vue-router'
 
   const router = useRouter()
+  const categories = ref([])
+
+  onMounted(() => {
+    axiosInstance.get('categories')
+      .then((res) => {
+        categories.value = res.data
+      })
+  })
   
   const initFormData = ref({
     title: '',
+    category: '',
     slug: '',
     excerpt: '',
     content: '',
@@ -105,6 +128,7 @@
   const submitPost = () => {
     const formData = new FormData()
     formData.append('title', initFormData.value.title)
+    formData.append('category', initFormData.value.category)
     formData.append('image', postImage.value)
     formData.append('slug', initFormData.value.slug)
     formData.append('excerpt', initFormData.value.excerpt)

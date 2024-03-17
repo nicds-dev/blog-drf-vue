@@ -17,6 +17,19 @@
               />
             </div>
             <div class="form-group mt-3">
+              <label for="category" class="fw-medium">Post Category *</label>
+              <select
+                v-model="initFormData.category"
+                class="form-select"
+                id="category"
+                required
+              >
+                <option v-for="category in categories" :key="category.id" :value="category.id">
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group mt-3">
               <label for="image" class="fw-medium">Post Image *</label>
               <input
                 @change="handleImageChange"
@@ -71,10 +84,12 @@
 
   const router = useRouter()
   const id = router.currentRoute.value.params.id
+  const categories = ref([])
   
   const initFormData = ref({
     id: '',
     title: '',
+    category: '',
     slug: '',
     excerpt: '',
     content: '',
@@ -86,6 +101,7 @@
       .then((res) => {
         initFormData.value.id = res.data.id
         initFormData.value.title = res.data.title
+        initFormData.value.category = res.data.category
         initFormData.value.slug = res.data.slug
         initFormData.value.excerpt = res.data.excerpt
         initFormData.value.content = res.data.content
@@ -95,6 +111,14 @@
         if (error.response) {
           console.error("Error response:", error.response.data)
         }
+      })
+
+    axiosInstance.get('categories')
+      .then((res) => {
+        categories.value = res.data
+      })
+      .catch((error) => {
+        console.error("Error during fetching categories:", error)
       })
   })
   
@@ -115,6 +139,7 @@
   const updatePost = () => {
     const formData = new FormData()
     formData.append('title', initFormData.value.title)
+    formData.append('category', initFormData.value.category)
     formData.append('slug', initFormData.value.slug)
     formData.append('excerpt', initFormData.value.excerpt)
     formData.append('content', initFormData.value.content)

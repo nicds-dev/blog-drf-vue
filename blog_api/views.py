@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
-from blog.models import Post
-from .serializers import PostSerializer
+from blog.models import Post, Category
+from .serializers import PostSerializer, CategorySerializer
 from rest_framework import generics, viewsets, permissions, status, filters
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -14,6 +14,11 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
         return obj.author == request.user
 
+
+# Category View
+class CategoryList(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 # Display Post Views General
 class PostList(generics.ListAPIView):
