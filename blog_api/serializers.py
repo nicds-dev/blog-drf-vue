@@ -3,7 +3,9 @@ from blog.models import Post
 from django.conf import settings
 
 class PostSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.name', read_only=True)
+
     class Meta:
         model = Post
-        fields = ('category', 'id', 'title', 'image', 'slug', 'author', 'excerpt', 'content', 'published', 'status')
+        fields = ('category', 'category_name', 'id', 'title', 'image', 'slug', 'author', 'excerpt', 'content', 'published', 'status')
         read_only_fields = ('author',)

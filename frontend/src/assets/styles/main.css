@@ -1,17 +1,42 @@
 .title-column {
-    max-width: 370px;
+    max-width: 148px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
 }
-
+@media (min-width:576px) {
+    .title-column {
+      max-width: 195px
+    }
+  }
+  @media (min-width:768px) {
+    .title-column {
+      max-width: 375px
+    }
+  }
+  @media (min-width:992px) {
+    .title-column {
+      max-width: 615px
+    }
+  }
+  @media (min-width:1200px) {
+    .title-column {
+      max-width: 795px
+    }
+  }
+  @media (min-width:1400px) {
+    .title-column {
+      max-width: 975px
+    }
+  }
 /*--------- Extra Bootstrap ---------*/
 .py-6 {
     padding-top: 5.4rem;
     padding-bottom: 5.4rem;
 }
 .vh-70 {
-    min-height: 71vh;
+    min-height: 76vh;
 }
 .mw-400 {
     max-width: 400px !important;

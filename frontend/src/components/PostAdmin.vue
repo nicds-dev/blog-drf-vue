@@ -4,46 +4,48 @@
       No posts yet
     </div>
     <div class="card p-4 my-5">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Category</th>
-            <th scope="col">Title</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="post in visiblePosts" :key="post.id">
-            <td scope="row">{{ post.id }}</td>
-            <td>{{ post.category }}</td>
-            <td class="title-column">
-              <router-link :to="`/post/${post.slug}`" class="custom-link">
-                {{ post.title }}
-              </router-link>
-            </td>
-            <td class="d-flex">
-              <div class="col">
-                <router-link :to="`/admin/update/${post.id}`" class="">
-                  <i class="bi bi-pencil-square fs-5"></i>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" class="col-1">Id</th>
+              <th scope="col" class="col-2">Category</th>
+              <th scope="col" class="col-8">Title</th>
+              <th scope="col" class="col-1">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="post in visiblePosts" :key="post.id">
+              <td scope="row">{{ post.id }}</td>
+              <td class="single-line">{{ post.category_name }}</td>
+              <td>
+                <router-link :to="`/post/${post.slug}`" class="custom-link title-column">
+                  {{ post.title }}
                 </router-link>
-              </div>
-              <div class="col">
-                <router-link :to="`/admin/delete/${post.id}`" class="">
-                  <i class="bi bi-trash-fill fs-5"></i>
-                </router-link>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+              <td class="d-flex">
+                <div class="col">
+                  <router-link :to="`/admin/update/${post.id}`" class="">
+                    <i class="bi bi-pencil-square fs-5"></i>
+                  </router-link>
+                </div>
+                <div class="col">
+                  <router-link :to="`/admin/delete/${post.id}`" class="">
+                    <i class="bi bi-trash-fill fs-5"></i>
+                  </router-link>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="d-flex justify-content-between">
         <div>
-          <button @click="previousPage" :disabled="currentPage === 1" class="btn btn-outline-secondary">Previous</button>
-          <button @click="nextPage" :disabled="currentPage === totalPages" class="btn btn-outline-secondary ms-2">Next</button>
+          <button @click="previousPage" :disabled="currentPage === 1" class="btn btn-outline-primary">Previous</button>
+          <button @click="nextPage" :disabled="currentPage === totalPages" class="btn btn-outline-primary ms-2">Next</button>
         </div>
-        <div>
+        <div class="me-2me-1 me-md-2">
           <span>{{ startIndex + 1 }} - {{ endIndex }} of {{ props.posts.length }}</span>
         </div>
       </div>
@@ -82,3 +84,9 @@
 
   const totalPages = computed(() => Math.ceil(props.posts.length / pageSize))
 </script>
+
+<style scoped>
+  .single-line {
+    white-space: nowrap;
+  }
+</style>
