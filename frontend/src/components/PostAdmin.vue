@@ -63,7 +63,7 @@
   const props = defineProps(['posts'])
 
   const currentPage = ref(1)
-  const pageSize = 2
+  const pageSize = 5
 
   const startIndex = computed(() => (currentPage.value - 1) * pageSize)
   const endIndex = computed(() => Math.min(startIndex.value + pageSize, props.posts.length))
