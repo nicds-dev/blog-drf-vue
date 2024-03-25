@@ -38,7 +38,7 @@ class PostListDetailFilter(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['^slug']
+    search_fields = ['slug', 'category__id']
 
 
 # Admin Post Views

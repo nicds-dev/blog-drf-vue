@@ -31,12 +31,15 @@
     }
   }
 /*--------- Extra Bootstrap ---------*/
+.fs-6 {
+  font-size: 1.1rem !important;
+}
 .py-6 {
     padding-top: 5.4rem;
     padding-bottom: 5.4rem;
 }
 .vh-70 {
-    min-height: 76vh;
+    min-height: calc(100vh - 245px);
 }
 .mw-400 {
     max-width: 400px !important;

@@ -31,7 +31,7 @@
                 </div>
                 <div class="col">
                   <router-link :to="`/admin/delete/${post.id}`" class="">
-                    <i class="bi bi-trash-fill fs-5"></i>
+                    <i class="bi bi-trash-fill text-danger fs-5"></i>
                   </router-link>
                 </div>
               </td>
@@ -39,8 +39,7 @@
           </tbody>
         </table>
       </div>
-
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between align-items-center">
         <div>
           <button @click="previousPage" :disabled="currentPage === 1" class="btn btn-outline-primary">Previous</button>
           <button @click="nextPage" :disabled="currentPage === totalPages" class="btn btn-outline-primary ms-2">Next</button>
@@ -49,7 +48,6 @@
           <span>{{ startIndex + 1 }} - {{ endIndex }} of {{ props.posts.length }}</span>
         </div>
       </div>
-
       <div class="ms-auto mt-3">
         <router-link to="/admin/create" class="btn btn-primary">New Post</router-link>
       </div>
@@ -63,7 +61,7 @@
   const props = defineProps(['posts'])
 
   const currentPage = ref(1)
-  const pageSize = 5
+  const pageSize = 4
 
   const startIndex = computed(() => (currentPage.value - 1) * pageSize)
   const endIndex = computed(() => Math.min(startIndex.value + pageSize, props.posts.length))
