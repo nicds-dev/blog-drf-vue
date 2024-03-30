@@ -4,7 +4,7 @@
     id="navbar" 
     class="navbar navbar-expand-lg bg-dark border-bottom p-2"
   >
-    <div class="container">
+    <div class="container" style="max-width: 1200px">
       <!-- Name/Logo -->
       <router-link to="/" class="navbar-brand nb-principal fw-bold fs-4 ps-3">Blog.<span class="text-primary">Dev</span></router-link>
       <!-- Toggle Button -->
@@ -37,7 +37,7 @@
             data-bs-dismiss="offcanvas" aria-label="Close"
           ></button>
         </div>
-        <div class="d-flex justify-content-between align-items-center my-3">
+        <div class="d-flex justify-content-between align-items-center my-3 order-2">
           <div class="text-end">
             <template v-if="!authStore.isAuthenticated">
               <router-link to="/log-in" class="btn btn-outline-light me-2">Login</router-link>
@@ -58,7 +58,7 @@
             </button>
           </form>
         </div>
-        <div v-if="router.currentRoute.value.name === 'home'" class="container py-3 border-top">
+        <div v-if="router.currentRoute.value.name === 'home'" class="container py-3 border-top order-lg-2 order-1" style="max-width: 1200px">
           <div class="offcanvas-body navbar-nav justify-content-center gap-4">
             <button
               class="nav-link fs-6"
