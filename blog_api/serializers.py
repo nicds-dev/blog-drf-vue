@@ -9,12 +9,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)
-    author_name = serializers.CharField(source='author.first_name', read_only=True)
-    author_about = serializers.CharField(source='author.about', read_only=True)
 
     class Meta:
         model = Post
         fields = (
-            'category', 'category_name', 'id', 'title', 'image', 'slug', 'author', 'author_name', 'author_about', 'excerpt', 'content', 'published', 'status'
+            'category', 'category_name', 'id', 'title', 'image', 'slug', 'author', 'content', 'created_at', 'updated_at', 'status'
             )
         read_only_fields = ('author',)
