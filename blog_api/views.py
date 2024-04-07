@@ -70,10 +70,16 @@ class DetailPost(generics.RetrieveAPIView):
         self.check_object_permissions(self.request, item)
         return item
 
-class UpdatePost(generics.UpdateAPIView):
+class UpdatePost(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def get_object(self):
+        queryset = Post.objects.filter(author=self.request.user)
+        item = get_object_or_404(queryset, pk=self.kwargs['pk'])
+        self.check_object_permissions(self.request, item)
+        return item
 
 class DeletePost(generics.RetrieveDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]

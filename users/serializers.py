@@ -7,7 +7,7 @@ from .models import NewUser
 class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewUser
-        fields = ('id', 'email', 'user_name', 'first_name', 'last_name', 'about', 'password')
+        fields = ('id', 'email', 'user_name', 'first_name', 'last_name', 'about', 'profile_image', 'password')
         extra_kwargs = {
             'password': {'write_only': True},
             'id': {'read_only': True},
@@ -28,4 +28,18 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             if len(set(password.lower())) <= 4:
                 raise ValidationError('Password must contain at least 5 unique characters')
         except ValidationError as err:
-            raise serializers.ValidationError({'password': err.messages})
+            raise ValidationError({'password': err.messages})
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewUser
+        fields = ('user_name', 'first_name', 'last_name', 'about', 'profile_image')
+
+class ResetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True, write_only=True)
+    confirm_password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['confirm_password']:
+            raise ValidationError('Passwords do not match')
+        return data

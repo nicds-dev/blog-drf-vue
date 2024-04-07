@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
+from django.core.exceptions import ValidationError
 
 class CustomAccountManager(BaseUserManager):
     def create_user(self, email, user_name, first_name, last_name, password, **extra_fields):
@@ -39,7 +39,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=150)
     start_date = models.DateTimeField(default=timezone.now)
     about = models.TextField(
-        'about', max_length=500
+        'about', max_length=500, blank=True, null=True
     )
     profile_image = models.ImageField(
         'profile image', upload_to='profile_image/', blank=True, null=True
@@ -70,3 +70,7 @@ class UserFollows(models.Model):
 
     def __str__(self):
         return f'{self.user} follows {self.followed_user}'
+    
+    def clean(self):
+        if self.user == self.followed_user:
+            raise ValidationError('Users cannot follow themselves.')

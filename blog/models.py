@@ -42,7 +42,10 @@ class Comment(models.Model):
         ordering = ('-created_at',)
 
     def __str__(self):
-        return f'Comment by {self.name} on {self.post}'
+        if self.parent:
+            return f'{self.user} replied to {self.parent.user} on {self.post}'
+        else:
+            return f'Comment by {self.user} on {self.post}'
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
