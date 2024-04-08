@@ -10,6 +10,8 @@ class CustomUserCreate(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return Response({"error": "You are already logged in, please log out first"}, status=status.HTTP_400_BAD_REQUEST)
         serializer = RegisterUserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
