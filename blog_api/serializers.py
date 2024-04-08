@@ -8,12 +8,13 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 class PostSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name', read_only=True)
+    author = serializers.StringRelatedField(read_only=True)
+    category = CategorySerializer(read_only=True)
 
     class Meta:
         model = Post
         fields = (
-            'category', 'category_name', 'id', 'title', 'image', 'slug', 'author', 'content',
+            'id', 'title', 'image', 'slug', 'author', 'category', 'content',
             'created_at', 'updated_at', 'status'
             )
         read_only_fields = ('author',)

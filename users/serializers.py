@@ -4,7 +4,13 @@ from django.core.exceptions import ValidationError
 from .models import NewUser
 
 
+def _validate_password(password):
+    if len(set(password.lower())) <= 4:
+        raise ValidationError('Password must contain at least 5 unique characters')
+
+
 class RegisterUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, validators=[validate_password, _validate_password])
     class Meta:
         model = NewUser
         fields = ('id', 'email', 'user_name', 'first_name', 'last_name', 'about', 'profile_image', 'password')
@@ -17,18 +23,15 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
-            self._validate_password(password)
             instance.set_password(password)
         instance.save()
         return instance
 
-    def _validate_password(self, password):
-        try:
-            validate_password(password)
-            if len(set(password.lower())) <= 4:
-                raise ValidationError('Password must contain at least 5 unique characters')
-        except ValidationError as err:
-            raise ValidationError({'password': err.messages})
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = NewUser
+        fields = ('id', 'email', 'user_name', 'first_name', 'last_name', 'about', 'profile_image', 'start_date', 'is_active')
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,5 +44,10 @@ class ResetPasswordSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data['new_password'] != data['confirm_password']:
-            raise ValidationError('Passwords do not match')
+            raise ValidationError('The two password fields didn`t match.')
+        try:
+            validate_password(data['new_password'])
+            _validate_password(data['new_password'])
+        except ValidationError as err:
+            raise ValidationError({'password': err})
         return data
