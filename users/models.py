@@ -56,21 +56,17 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
         return self.user_name
 
 class UserFollows(models.Model):
-    user = models.ForeignKey(
-        NewUser, on_delete=models.CASCADE, related_name='following'
-    )
-    followed_user = models.ForeignKey(
-        NewUser, on_delete=models.CASCADE, related_name='followed_by'
-    )
+    follower = models.ForeignKey(NewUser, on_delete=models.CASCADE, related_name='following')
+    following = models.ForeignKey(NewUser, on_delete=models.CASCADE, related_name='followers')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'followed_user',)
+        unique_together = ('follower', 'following',)
         ordering = ('-created_at',)
 
     def __str__(self):
-        return f'{self.user} follows {self.followed_user}'
+        return f'{self.follower} follows {self.following}'
     
     def clean(self):
-        if self.user == self.followed_user:
+        if self.follower == self.following:
             raise ValidationError('Users cannot follow themselves.')

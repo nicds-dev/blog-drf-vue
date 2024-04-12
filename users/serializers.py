@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from .models import NewUser
+from blog_api.serializers import PostSerializer
+from .models import NewUser, UserFollows
 
 
 def _validate_password(password):
@@ -28,15 +29,35 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         return instance
 
 class UserSerializer(serializers.ModelSerializer):
+    blog_posts = PostSerializer(many=True, read_only=True)
+    num_followers = serializers.SerializerMethodField()
+    num_following = serializers.SerializerMethodField()
+
+    def get_num_followers(self, obj):
+        return obj.followed_by.count()
+
+    def get_num_following(self, obj):
+        return obj.following.count()
 
     class Meta:
         model = NewUser
-        fields = ('id', 'email', 'user_name', 'first_name', 'last_name', 'about', 'profile_image', 'start_date', 'is_active')
+        fields = (
+            'id', 'email', 'user_name', 'first_name', 'last_name', 'profile_image', 'about',
+            'blog_posts','start_date', 'num_followers', 'num_following'
+        )
+        read_only_fields = ('email', 'start_date',)
 
-class UpdateUserSerializer(serializers.ModelSerializer):
+class FollowerSerializer(serializers.ModelSerializer):
+    follower = serializers.CharField(source='follower.user_name')
     class Meta:
-        model = NewUser
-        fields = ('user_name', 'first_name', 'last_name', 'about', 'profile_image')
+        model = UserFollows
+        fields = ('id', 'follower', 'created_at')
+
+class FollowingSerializer(serializers.ModelSerializer):
+    following = serializers.CharField(source='following.user_name')
+    class Meta:
+        model = UserFollows
+        fields = ('id', 'following', 'created_at')
 
 class ResetPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True, write_only=True)

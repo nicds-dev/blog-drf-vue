@@ -8,9 +8,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
-    category = CategorySerializer(read_only=True)
-
     class Meta:
         model = Post
         fields = (

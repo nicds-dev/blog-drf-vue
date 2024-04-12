@@ -60,16 +60,6 @@ class CreatePost(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class DetailPost(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    serializer_class = PostSerializer
-
-    def get_object(self):
-        queryset = Post.objects.filter(author=self.request.user)
-        item = get_object_or_404(queryset, pk=self.kwargs['pk'])
-        self.check_object_permissions(self.request, item)
-        return item
-
 class UpdatePost(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.all()

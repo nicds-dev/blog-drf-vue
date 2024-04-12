@@ -1,11 +1,17 @@
 from django.urls import path
-from .views import CustomUserCreate, UpdateUserView, ResetPasswordView, BlacklistTokenUpdateView
+from .views import (
+    CustomUserCreate, UpdateUserView, ResetPasswordView, BlacklistTokenUpdateView,
+    SingleUserView, FollowersListView, FollowingListView
+    )
 
 app_name = 'users'
 
 urlpatterns = [
-    path('register/', CustomUserCreate.as_view(), name='create_user'),
-    path("update-user", UpdateUserView.as_view(), name="update_user"),
-    path('reset-password', ResetPasswordView.as_view(), name='reset_password'),
-    path('logout/blacklist', BlacklistTokenUpdateView.as_view(), name='blacklist'),
+    path('account/register/', CustomUserCreate.as_view(), name='create_user'),
+    path("account/edit/", UpdateUserView.as_view(), name="update_user"),
+    path('account/reset-password/', ResetPasswordView.as_view(), name='reset_password'),
+    path('account/logout/blacklist/', BlacklistTokenUpdateView.as_view(), name='blacklist'),
+    path("<str:user_name>/", SingleUserView.as_view(), name="detail_user"),
+    path("<str:user_name>/followers/", FollowersListView.as_view(), name="followers"),
+    path("<str:user_name>/following/", FollowingListView.as_view(), name="following"),
 ]
