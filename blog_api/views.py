@@ -49,7 +49,7 @@ class CommentListCreateView(APIView):
         post = get_object_or_404(Post, slug=slug)
         comments = post.comments.all()
         serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, slug):
         post = get_object_or_404(Post, slug=slug)
@@ -72,12 +72,41 @@ class CommentDeleteView(generics.DestroyAPIView):
         except Comment.DoesNotExist:
             return Response({'error': 'Comment not found'} ,status=status.HTTP_404_NOT_FOUND)
         
+        if kwargs['slug'] != comment.post.slug:
+            return Response({'error': 'Comment does not belong to the post'}, status=status.HTTP_404_NOT_FOUND)
+        
         if comment.author != request.user:
             return Response({'error': 'You are not authorized to delete this comment'}, status=status.HTTP_403_FORBIDDEN)
         
         comment.delete()
         return Response({'message': 'Comment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
+# class LikeListCreateView(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get(self, request, slug):
+#         post = get_object_or_404(Post, slug=slug)
+#         likes = post.likes.all()
+#         serializer = LikeSerializer(likes, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+
+#     def post(self, request, slug):
+#         post = get_object_or_404(Post, slug=slug)
+#         user = request.user
+
+#         if post.likes.filter(id=user.id).exists():
+#             post.likes.remove(user)
+#             liked = False
+#         else:
+#             post.likes.add(user)
+#             liked = True
+
+#         data = {
+#             'liked': liked,
+#             'count': post.number_of_likes()
+#         }
+
+#         return Response(data, status=status.HTTP_200_OK)
 
 # Admin Post Views
 class PostListAdminView(generics.ListAPIView):

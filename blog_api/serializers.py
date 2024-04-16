@@ -15,9 +15,11 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'post', 'author', 'author_name', 'author_pic', 'content', 'created_at', 'parent')
 
 class LikeSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.user_name', read_only=True)
+    author_pic = serializers.CharField(source='author.profile_image', read_only=True)
     class Meta:
         model = Like
-        fields = ('id', 'post', 'author', 'created_at')
+        fields = ('id', 'post', 'author', 'author_name', 'author_pic', 'created_at')
 
 class PostSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.user_name', read_only=True)
