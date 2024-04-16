@@ -1,6 +1,6 @@
 from django.db import models
-from django.utils import timezone
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -33,7 +33,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
@@ -43,18 +43,22 @@ class Comment(models.Model):
 
     def __str__(self):
         if self.parent:
-            return f'{self.user} replied to {self.parent.user} on {self.post}'
+            return f'{self.author} replied to {self.parent.author} on {self.post}'
         else:
-            return f'Comment by {self.user} on {self.post}'
+            return f'Comment by {self.author} on {self.post}'
+    
+    def clean(self):
+        if self.parent and self.parent.post != self.post:
+            raise ValidationError("Parent comment must be on the same post.")
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('post', 'user',)
+        unique_together = ('post', 'author',)
         ordering = ('-created_at',)
 
     def __str__(self):
-        return f'{self.user} likes {self.post}'
+        return f'{self.author} likes {self.post}'

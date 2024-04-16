@@ -29,7 +29,6 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         return instance
 
 class UserSerializer(serializers.ModelSerializer):
-    blog_posts = PostSerializer(many=True, read_only=True)
     num_posts = serializers.SerializerMethodField()
     num_followers = serializers.SerializerMethodField()
     num_following = serializers.SerializerMethodField()
@@ -47,7 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = NewUser
         fields = (
             'id', 'email', 'user_name', 'first_name', 'last_name', 'profile_image', 'about',
-            'blog_posts','start_date', 'num_posts', 'num_followers', 'num_following'
+            'start_date', 'num_posts', 'num_followers', 'num_following'
         )
         read_only_fields = ('email', 'start_date',)
 
