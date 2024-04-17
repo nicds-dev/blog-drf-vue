@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404
+from django.utils.text import slugify
 from blog.models import Post, Category, Comment, Like
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer, LikeSerializer
 from rest_framework import generics, permissions, status, filters
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 # User Permissions
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -28,7 +30,7 @@ class PostListView(generics.ListAPIView):
 class PostDetailView(generics.RetrieveAPIView):
     serializer_class = PostSerializer
 
-    def get_object(self):
+    def get_object(self, queryset=None, **kwargs):
         item = self.kwargs.get('pk')
         return get_object_or_404(Post, slug=item)
 
@@ -113,10 +115,14 @@ class PostCreateAdminView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
-    def post(self, request):
+    def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=request.user)
+            slug = slugify(serializer.validated_data['title'])
+            if Post.objects.filter(slug=slug).exists():
+                raise ValidationError('Post with this title already exists.')
+            
+            serializer.save(author=request.user, slug=slug)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -131,7 +137,30 @@ class PostUpdateAdminView(generics.RetrieveUpdateAPIView):
         self.check_object_permissions(self.request, item)
         return item
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=kwargs.get('partial', False))
+        serializer.is_valid(raise_exception=True)
+       
+        if 'title' in serializer.validated_data:
+            slug = slugify(serializer.validated_data['title'])
+            if Post.objects.exclude(pk=instance.pk).filter(slug=slug).exists():
+                raise ValidationError('Post with this title already exists.')
+            instance.slug = slug
+        
+        instance = serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class PostDeleteAdminView(generics.RetrieveDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def delete(self, request, *args, **kwargs):
+        post_id = kwargs['pk']
+        try:
+            post = Post.objects.get(id=post_id)
+            post.delete()
+            return Response({'message': 'Post deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)

@@ -16,7 +16,7 @@ class Post(models.Model):
     title = models.CharField(max_length=250)
     image = models.ImageField(upload_to='posts/', default='posts/default.jpg')
     content = models.TextField()
-    slug = models.SlugField(max_length=250, unique_for_date='created_at')
+    slug = models.SlugField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')

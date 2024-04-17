@@ -25,7 +25,7 @@ class PostSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.user_name', read_only=True)
     author_pic = serializers.CharField(source='author.profile_image', read_only=True)
     author_bio = serializers.CharField(source='author.about', read_only=True)
-    category = CategorySerializer(read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True)
     num_comments = serializers.SerializerMethodField()
     num_likes = serializers.SerializerMethodField()
 
@@ -39,7 +39,7 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = (
             'id', 'title', 'image', 'slug', 'author', 'author_name', 'author_pic', 'author_bio',
-            'category', 'content', 'num_comments', 'num_likes',
+            'category', 'category_name', 'content', 'num_comments', 'num_likes',
             'created_at', 'updated_at', 'status'
             )
-        read_only_fields = ('author', )
+        read_only_fields = ('author', 'slug', )
