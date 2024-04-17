@@ -27,12 +27,19 @@ class PostSerializer(serializers.ModelSerializer):
     author_bio = serializers.CharField(source='author.about', read_only=True)
     category = CategorySerializer(read_only=True)
     num_comments = serializers.SerializerMethodField()
+    num_likes = serializers.SerializerMethodField()
+
     def get_num_comments(self, obj):
         return obj.comments.count()
+    
+    def get_num_likes(self, obj):
+        return obj.likes.count()
+
     class Meta:
         model = Post
         fields = (
-            'id', 'title', 'image', 'slug', 'author', 'author_name', 'author_pic', 'author_bio', 'category', 'content', 'num_comments',
+            'id', 'title', 'image', 'slug', 'author', 'author_name', 'author_pic', 'author_bio',
+            'category', 'content', 'num_comments', 'num_likes',
             'created_at', 'updated_at', 'status'
             )
         read_only_fields = ('author', )

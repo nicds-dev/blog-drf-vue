@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from blog.models import Post, Category, Comment
+from blog.models import Post, Category, Comment, Like
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer, LikeSerializer
 from rest_framework import generics, permissions, status, filters
 from rest_framework.views import APIView
@@ -81,32 +81,25 @@ class CommentDeleteView(generics.DestroyAPIView):
         comment.delete()
         return Response({'message': 'Comment deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
-# class LikeListCreateView(APIView):
-#     permission_classes = [permissions.IsAuthenticated]
+class LikeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-#     def get(self, request, slug):
-#         post = get_object_or_404(Post, slug=slug)
-#         likes = post.likes.all()
-#         serializer = LikeSerializer(likes, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request, slug):
+        post = get_object_or_404(Post, slug=slug)
+        likes = post.likes.all()
+        serializer = LikeSerializer(likes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-#     def post(self, request, slug):
-#         post = get_object_or_404(Post, slug=slug)
-#         user = request.user
+    def post(self, request, slug):
+        like = Like.objects.filter(post__slug=slug, author=request.user)
+        post = get_object_or_404(Post, slug=slug)
 
-#         if post.likes.filter(id=user.id).exists():
-#             post.likes.remove(user)
-#             liked = False
-#         else:
-#             post.likes.add(user)
-#             liked = True
-
-#         data = {
-#             'liked': liked,
-#             'count': post.number_of_likes()
-#         }
-
-#         return Response(data, status=status.HTTP_200_OK)
+        if like.exists():
+            like.delete()
+            return Response({'message': 'Like removed successfully'}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            Like.objects.create(post=post, author=request.user)
+            return Response({'message': 'Like added successfully'}, status=status.HTTP_201_CREATED)
 
 # Admin Post Views
 class PostListAdminView(generics.ListAPIView):
