@@ -19,7 +19,7 @@
 
   const deletePost = () => {
     axiosInstance
-      .delete(`admin/delete/${id}`)
+      .delete(`admin/delete/${id}/`)
       .then((res) => {
         console.log('Post deleted:', res)
         router.push('/admin/')

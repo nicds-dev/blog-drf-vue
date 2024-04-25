@@ -13,7 +13,7 @@
                 </div>
                 <div class="card-footer bg-white border-0">
                     <h6 class="text-primary">{{ post.category_name }}</h6>
-                    <span class="text-secondary mt-auto">{{ formatDate(post.published) }}</span>
+                    <span class="text-secondary mt-auto">{{ formatDate(post.created_at) }}</span>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
 <style scoped>
     .multi-line {
         display: -webkit-box;
-        -webkit-line-clamp: 2; /* Número máximo de líneas */
+        -webkit-line-clamp: 2; /* number of lines to show */
         -webkit-box-orient: vertical;
         overflow: hidden;
     }

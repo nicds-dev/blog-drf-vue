@@ -1,5 +1,5 @@
 <template>
-  <section class="container vh-70">
+  <section class="container vh-70-home">
     <Post v-if="!loading" />
     <PostLoading v-else />
   </section>

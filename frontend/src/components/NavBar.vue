@@ -39,7 +39,7 @@
         </div>
         <div class="d-flex justify-content-between align-items-center my-3 order-2">
           <div class="text-end">
-            <template v-if="!authStore.isAuthenticated">
+            <template v-if="!authStore.user">
               <router-link to="/log-in" class="btn btn-outline-light me-2">Login</router-link>
               <router-link to="/sign-up" class="btn btn-primary">Sign Up</router-link>
             </template>
@@ -95,7 +95,7 @@
   const searchText = ref('')
   
   onMounted(() => {
-    axiosInstance.get('categories')
+    axiosInstance.get('categories/')
       .then((res) => {
         categories.value = res.data
       })

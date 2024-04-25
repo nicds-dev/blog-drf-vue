@@ -82,7 +82,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  const isAuthenticated = authStore.isAuthenticated
+  const isAuthenticated = authStore.user ? true : false 
   const needsAuth = to.meta.requiresAuth
 
   if (needsAuth && !isAuthenticated) {

@@ -2,10 +2,12 @@ from rest_framework import status, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import (
-    RegisterUserSerializer, UserSerializer,FollowerSerializer, FollowingSerializer, ResetPasswordSerializer
+    RegisterUserSerializer, CustomTokenObtainPairSerializer,
+    UserSerializer,FollowerSerializer, FollowingSerializer, ResetPasswordSerializer
     )
 from .models import NewUser, UserFollows
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class CustomUserCreate(APIView):
@@ -20,6 +22,10 @@ class CustomUserCreate(APIView):
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
 
 class SingleUserView(generics.RetrieveAPIView):
     queryset = NewUser.objects.all()
@@ -108,15 +114,16 @@ class FollowingListView(generics.ListAPIView):
         user_name = self.kwargs['user_name']
         user = NewUser.objects.get(user_name=user_name)
         return UserFollows.objects.filter(follower=user)
-    
+
+
 class BlacklistTokenUpdateView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         try:
-            refresh_token = request.data['refresh_token']
+            refresh_token = request.data['refresh']
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'User logout successfully'}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as err:
+            return Response({'error': str(err)}, status=status.HTTP_400_BAD_REQUEST)

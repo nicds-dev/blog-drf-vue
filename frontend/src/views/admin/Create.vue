@@ -10,7 +10,6 @@
               <input
                 @change="handleChange"
                 v-model="initFormData.title"
-                @input="updateSlug"
                 type="text"
                 class="form-control"
                 id="title"
@@ -42,28 +41,6 @@
               />
             </div>
             <div class="form-group mt-3">
-              <label for="excerpt">Post Excerpt *</label>
-              <textarea
-                @change="handleChange"
-                v-model="initFormData.excerpt"
-                class="form-control"
-                id="excerpt"
-                rows="4"
-                required
-              ></textarea>
-            </div>
-            <div class="form-group mt-3">
-              <label for="slug">Slug *</label>
-              <input
-                @change="handleChange"
-                v-model="initFormData.slug"
-                type="text"
-                class="form-control"
-                id="slug"
-                required
-              />
-            </div>
-            <div class="form-group mt-3">
               <label for="content">Content *</label>
               <textarea
                 @change="handleChange"
@@ -73,7 +50,7 @@
                 rows="4"
               ></textarea>
             </div>
-            <button type="submit" class="btn btn-primary mt-4 w-100">
+            <button type="submit" class="btn btn-primary mt-4 mb-2 w-100">
               Create Post
             </button>
           </form>
@@ -92,7 +69,7 @@
   const categories = ref([])
 
   onMounted(() => {
-    axiosInstance.get('categories')
+    axiosInstance.get('categories/')
       .then((res) => {
         categories.value = res.data
       })
@@ -101,21 +78,9 @@
   const initFormData = ref({
     title: '',
     category: '',
-    slug: '',
-    excerpt: '',
     content: '',
   })
   const postImage = ref(null)
-
-  const updateSlug = () => {
-    initFormData.value.slug = initFormData.value.title
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/&+/g, 'and')
-      .replace(/[^a-z0-9\s]+/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/^-+|-+$/g, '')
-  }
 
   const handleChange = (e) => {
     if (e.target.id === 'image') {
@@ -130,10 +95,8 @@
     formData.append('title', initFormData.value.title)
     formData.append('category', initFormData.value.category)
     formData.append('image', postImage.value)
-    formData.append('slug', initFormData.value.slug)
-    formData.append('excerpt', initFormData.value.excerpt)
     formData.append('content', initFormData.value.content)
-    axiosInstance.post('admin/create', formData, {
+    axiosInstance.post('admin/create/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

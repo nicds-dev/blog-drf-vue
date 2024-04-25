@@ -2,12 +2,20 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from .models import NewUser, UserFollows
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 def _validate_password(password):
     if len(set(password.lower())) <= 4:
         raise ValidationError('Password must contain at least 5 unique characters')
 
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['user_name'] = user.user_name
+        return token
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password, _validate_password])

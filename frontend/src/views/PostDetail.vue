@@ -3,7 +3,7 @@
         <div class="container text-center">
             <h1 class="fw-semibold mt-5 mb-2">{{ post.title }}</h1>
             <ul class="header-detail">
-                <li class="text-secondary">{{ formatDate(post.published) }}</li>
+                <li class="text-secondary">{{ formatDate(post.created_at) }}</li>
                 <li class="text-secondary">In <span class="text-dark">{{ post.category_name }}</span></li>
             </ul>
         </div>
@@ -13,7 +13,7 @@
         <p class="fs-6 px-md-5 mb-5">{{ post.content }}</p>
         <div class="container px-md-5 py-5 border-top">
             <h2 class="fs-4 text-secondary">Post by: <span class="text-dark fw-medium">{{ post.author_name }}</span></h2>
-            <p class="my-3 px-md-5 fst-italic text-secondary">"{{ post.author_about }}"</p>
+            <p class="my-3 px-md-5 fst-italic text-secondary">"{{ post.author_bio }}"</p>
         </div>
     </section>
 </template>

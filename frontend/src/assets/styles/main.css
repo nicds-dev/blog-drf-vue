@@ -60,6 +60,9 @@ body {
 .vh-70 {
     min-height: calc(100vh - 245px);
 }
+.vh-70-home {
+  min-height: calc(100vh - 321px);
+}
 .mw-400 {
     max-width: 400px !important;
 }
