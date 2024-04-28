@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
 from django.utils.text import slugify
+from django_filters.rest_framework import DjangoFilterBackend
 from blog.models import Post, Category, Comment, Like
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer, LikeSerializer
-from rest_framework import generics, permissions, status, filters
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -26,6 +27,12 @@ class CategoryListView(generics.ListAPIView):
 class PostListView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'slug': ['icontains'],
+        'category': ['exact'],
+        'author__user_name': ['exact'],
+    }
 
 class PostDetailView(generics.RetrieveAPIView):
     serializer_class = PostSerializer
@@ -33,14 +40,6 @@ class PostDetailView(generics.RetrieveAPIView):
     def get_object(self, queryset=None, **kwargs):
         item = self.kwargs.get('pk')
         return get_object_or_404(Post, slug=item)
-
-
-# Search Post Views
-class PostListDetailFilterView(generics.ListAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['slug', 'category__id']
 
 
 # Post Comment & Like Views

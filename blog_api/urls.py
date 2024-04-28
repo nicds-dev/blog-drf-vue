@@ -1,5 +1,5 @@
 from .views import (
-    CategoryListView, PostListView, PostDetailView, PostListDetailFilterView,
+    CategoryListView, PostListView, PostDetailView,
     CommentListCreateView, CommentDeleteView, LikeView,
     PostListAdminView, PostCreateAdminView, PostUpdateAdminView, PostDeleteAdminView
     )
@@ -14,7 +14,6 @@ urlpatterns = [
     path('post/<slug:slug>/comments/', CommentListCreateView.as_view(), name='post-comments'),
     path('post/<slug:slug>/comment-delete/<int:pk>/', CommentDeleteView.as_view(), name='delete-comment'),
     path('post/<slug:slug>/likes/', LikeView.as_view(), name='post-likes'),
-    path('search/', PostListDetailFilterView.as_view(), name='search-post'),
     # Post Admin URLs
     path('admin/list/', PostListAdminView.as_view(), name='adminlist-post'),
     path('admin/create/', PostCreateAdminView.as_view(), name='create-post'),
