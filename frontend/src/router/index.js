@@ -10,6 +10,7 @@ import Admin from '@/views/Admin.vue'
 import Create from '@/views/admin/Create.vue'
 import Update from '@/views/admin/Update.vue'
 import Delete from '@/views/admin/Delete.vue'
+import UserProfile from '@/views/UserProfile.vue'
 
 
 const routes = [
@@ -20,7 +21,7 @@ const routes = [
     }
   },
   {
-    path: '/search', name: 'search', component: SearchView,
+    path: '/search/:query', name: 'search', component: SearchView,
     meta: {
       requiresAuth: false
     }
@@ -68,6 +69,12 @@ const routes = [
     }
   },
   {
+    path: '/:user', name: 'userProfile', component: UserProfile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/log-out', name: 'logOut', component: LogOut,
     meta: {
       requiresAuth: true
@@ -82,7 +89,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  const isAuthenticated = authStore.isAuthenticated
+  const isAuthenticated = authStore.user ? true : false 
   const needsAuth = to.meta.requiresAuth
 
   if (needsAuth && !isAuthenticated) {

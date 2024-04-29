@@ -16,7 +16,7 @@
   const loading = ref(true)
 
   onMounted(() => {
-    axiosInstance.get('admin/list')
+    axiosInstance.get('admin/list/')
       .then((res) => {
         posts.value = res.data
         loading.value = false

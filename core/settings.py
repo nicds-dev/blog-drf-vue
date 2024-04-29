@@ -32,6 +32,7 @@ BASE_APPS = [
 ]
 
 THIRD_APPS = [
+    'django_filters',
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
@@ -157,7 +158,6 @@ AUTH_USER_MODEL = 'users.NewUser'
 
 
 # JWT
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
@@ -169,9 +169,11 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
 
-    'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',

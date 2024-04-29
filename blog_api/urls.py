@@ -1,18 +1,23 @@
-from .views import PostList, CategoryList, PostDetail, PostListDetailFilter, ListPost, CreatePost, DetailPost, UpdatePost, DeletePost
+from .views import (
+    CategoryListView, PostListView, PostDetailView,
+    CommentListCreateView, CommentDeleteView, LikeView,
+    PostListAdminView, PostCreateAdminView, PostUpdateAdminView, PostDeleteAdminView
+    )
 from django.urls import path
 
 app_name = 'blog_api'
 
 urlpatterns = [
-    path('', PostList.as_view(), name='listpost'),
-    path('categories', CategoryList.as_view(), name='listcategory'),
-    path('post/<str:pk>', PostDetail.as_view(), name='detailpost'),
-    path('search/', PostListDetailFilter.as_view(), name='searchpost'),
+    path('', PostListView.as_view(), name='list-post'),
+    path('categories/', CategoryListView.as_view(), name='list-category'),
+    path('post/<str:pk>/', PostDetailView.as_view(), name='detail-post'),
+    path('post/<slug:slug>/comments/', CommentListCreateView.as_view(), name='post-comments'),
+    path('post/<slug:slug>/comment-delete/<int:pk>/', CommentDeleteView.as_view(), name='delete-comment'),
+    path('post/<slug:slug>/likes/', LikeView.as_view(), name='post-likes'),
     # Post Admin URLs
-    path('admin/list', ListPost.as_view(), name='adminlistpost'),
-    path('admin/create', CreatePost.as_view(), name='createpost'),
-    path('admin/update/detail/<int:pk>', DetailPost.as_view(), name='admindetailpost'),
-    path('admin/update/<int:pk>', UpdatePost.as_view(), name='updatepost'),
-    path('admin/delete/<int:pk>', DeletePost.as_view(), name='deletepost'),
+    path('admin/list/', PostListAdminView.as_view(), name='adminlist-post'),
+    path('admin/create/', PostCreateAdminView.as_view(), name='create-post'),
+    path('admin/update/<int:pk>/', PostUpdateAdminView.as_view(), name='update-post'),
+    path('admin/delete/<int:pk>/', PostDeleteAdminView.as_view(), name='delete-post'),
 ]
 

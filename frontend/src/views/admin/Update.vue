@@ -9,7 +9,6 @@
               <label for="title" class="fw-medium">Post Title *</label>
               <input
                 v-model="initFormData.title"
-                @input="updateSlug"
                 type="text"
                 class="form-control"
                 id="title"
@@ -36,26 +35,6 @@
                 class="form-control"
                 type="file"
                 id="image"
-              />
-            </div>
-            <div class="form-group mt-3">
-              <label for="excerpt">Post Excerpt *</label>
-              <textarea
-                v-model="initFormData.excerpt"
-                class="form-control"
-                id="excerpt"
-                rows="4"
-                required
-              ></textarea>
-            </div>
-            <div class="form-group mt-3">
-              <label for="slug">Slug *</label>
-              <input
-                v-model="initFormData.slug"
-                type="text"
-                class="form-control"
-                id="slug"
-                required
               />
             </div>
             <div class="form-group mt-3">
@@ -90,14 +69,12 @@
     id: '',
     title: '',
     category: '',
-    slug: '',
-    excerpt: '',
     content: '',
   })
   const postImage = ref(null)
 
   onBeforeMount(() => {
-    axiosInstance.get(`admin/update/detail/${id}`)
+    axiosInstance.get(`admin/update/${id}/`)
       .then((res) => {
         initFormData.value.id = res.data.id
         initFormData.value.title = res.data.title
@@ -121,16 +98,6 @@
         console.error("Error during fetching categories:", error)
       })
   })
-  
-  const updateSlug = () => {
-    initFormData.value.slug = initFormData.value.title
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/&+/g, 'and')
-      .replace(/[^a-z0-9\s]+/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/^-+|-+$/g, '')
-  }
 
   const handleImageChange = (e) => {
     postImage.value = e.target.files[0]
@@ -140,14 +107,12 @@
     const formData = new FormData()
     formData.append('title', initFormData.value.title)
     formData.append('category', initFormData.value.category)
-    formData.append('slug', initFormData.value.slug)
-    formData.append('excerpt', initFormData.value.excerpt)
     formData.append('content', initFormData.value.content)
     if (postImage.value) {
       formData.append('image', postImage.value)
     }
 
-    axiosInstance.put(`admin/update/${id}`, formData, {
+    axiosInstance.put(`admin/update/${id}/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

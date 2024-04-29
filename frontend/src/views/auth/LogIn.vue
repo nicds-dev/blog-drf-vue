@@ -69,8 +69,8 @@
         
         try {
             await authStore.login(formData.value.email, formData.value.password)
-            
-            if (authStore.isAuthenticated) {
+
+            if (authStore.user) {
                 router.push('/')
             }
         } catch (error) {

@@ -25,12 +25,12 @@
               </td>
               <td class="d-flex">
                 <div class="col">
-                  <router-link :to="`/admin/update/${post.id}`" class="">
+                  <router-link :to="`/admin/update/${post.id}/`" class="">
                     <i class="bi bi-pencil-square fs-5"></i>
                   </router-link>
                 </div>
                 <div class="col">
-                  <router-link :to="`/admin/delete/${post.id}`" class="">
+                  <router-link :to="`/admin/delete/${post.id}/`" class="">
                     <i class="bi bi-trash-fill text-danger fs-5"></i>
                   </router-link>
                 </div>

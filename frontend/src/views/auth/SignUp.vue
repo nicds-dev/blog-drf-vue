@@ -28,6 +28,26 @@
                             />
                         </div>
                         <div class="form-group mt-3">
+                            <label for="firstname" class="fw-medium">First Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                :class="{ 'is-invalid': errorField === 'firstname' }"
+                                v-model="formData.firstname"
+                                @input="signUpChange('firstname')"
+                                required
+                            />
+                            <label for="lastname" class="fw-medium">Last Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                :class="{ 'is-invalid': errorField === 'lastname' }"
+                                v-model="formData.lastname"
+                                @input="signUpChange('lastname')"
+                                required
+                            />
+                        </div>
+                        <div class="form-group mt-3">
                             <label for="password" class="fw-medium">Password</label>
                             <input
                                 type="password"
@@ -67,6 +87,8 @@
     const formData = ref({
         email: '',
         username: '',
+        firstname: '',
+        lastname: '',
         password: '',
     })
 
@@ -78,24 +100,23 @@
     }
 
     const signUp = async () => {
-        if (!formData.value.email || !formData.value.username || !formData.value.password) {
+        if (!formData.value.email || !formData.value.username || !formData.value.firstname || !formData.value.lastname || !formData.value.password) {
             showError('Please fill in all fields.')
             return
         }
 
         try {
-            const response = await axiosInstance.post('user/register/', {
+            const response = await axiosInstance.post('user/account/register/', {
                 email: formData.value.email,
                 user_name: formData.value.username,
+                first_name: formData.value.firstname,
+                last_name: formData.value.lastname,
                 password: formData.value.password,
             })
             router.push('/log-in')
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 400 && error.response.data) {
-                    console.log(error.response.data.email)
-                    console.log(error.response.data.user_name)
-                    
                     if (error.response.data.email && error.response.data.email.length > 0) {
                         showError('email', 
                             error.response.data.email[0] === 'new user with this email address already exists.'

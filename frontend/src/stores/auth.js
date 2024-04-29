@@ -1,29 +1,29 @@
 import { defineStore } from 'pinia'
 import axiosInstance from '@/interceptors/axios'
+import { jwtDecode } from 'jwt-decode'
+import dayjs from 'dayjs'
 
 export const useAuthStore = defineStore('auth', {
     state: () => {
         return {
-            isAuthenticated: !!localStorage.getItem('access_token'),
+            authTokens: localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null,
+            user: localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null,
             errorMessage: null,
         }
     },
-    getters: {
-    },
+    getters: {},
     actions: {
         async login(email, password) {
             try {
-                const response = await axiosInstance.post('/token/', {
+                const response = await axiosInstance.post('user/account/login/', {
                     email,
                     password
                 })
-                localStorage.setItem('access_token', response.data.access)
-                localStorage.setItem('refresh_token', response.data.refresh)
-                axiosInstance.defaults.headers['Authorization'] =
-                    'JWT ' + response.data.access
-                    
-                this.isAuthenticated = true
-                this.errorMessage = null
+                if (response.status === 200) {
+                    this.authTokens = response.data
+                    this.user = jwtDecode(response.data.access)
+                    localStorage.setItem('authTokens', JSON.stringify(response.data))
+                }
             } catch (error) {
                 if (error.response && error.response.status === 401) {
                     this.errorMessage = 'Invalid email or password. Please try again.'
@@ -33,21 +33,26 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
-            try {
-                await axiosInstance.post('user/logout/blacklist/', {
-                    refresh_token: localStorage.getItem('refresh_token')
-                })
-            } catch (error) {
-                console.error('Error during logout', error)
-            } finally {
-                localStorage.removeItem('access_token')
-                localStorage.removeItem('refresh_token')
-                axiosInstance.defaults.headers['Authorization'] = null
-                
-                this.isAuthenticated = false
-                this.errorMessage = null
+            const isAboutExpired = dayjs.unix(this.user.exp).diff(dayjs(), 'seconds') < 45 // 15 seconds before expiration
+            console.log('expired: ', isAboutExpired, 'time left:', dayjs.unix(this.user.exp).diff(dayjs(), 'seconds'))
+            // If the token is not about to expire, then logout
+            if (!isAboutExpired) {
+                try {
+                    await axiosInstance.post('user/account/logout-blacklist/', {
+                        refresh: this.authTokens.refresh
+                    })
+                } catch (error) {
+                    console.log('Error during logout', error)
+                } finally {
+                    this.authTokens = null
+                    this.user = null
+                    localStorage.removeItem('authTokens')
+                }
+            } else {
+                this.authTokens = null
+                this.user = null
+                localStorage.removeItem('authTokens')
             }
-
-        }
+        },
     }
 })
