@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use(async config => {
 
     if (authTokens) {
         const user = jwtDecode(authTokens.access)
-        const isAboutExpired = dayjs.unix(user.exp).diff(dayjs(), 'seconds') < 10 // 10 seconds before expiration
+        const isAboutExpired = dayjs.unix(user.exp).diff(dayjs(), 'seconds') < 40 // 10 seconds before expiration
 
         if (isAboutExpired && !isRefreshing) {
             isRefreshing = true
@@ -42,7 +42,7 @@ axiosInstance.interceptors.request.use(async config => {
             config.headers['Authorization'] = `Bearer ${authTokens.access}`
         }
     } else {
-        // If there is no authTokens in localStorage, then do not add any header
+        config.headers['Authorization'] = null
     }
     return config
 })

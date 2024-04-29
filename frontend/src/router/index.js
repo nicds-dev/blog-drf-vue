@@ -10,6 +10,7 @@ import Admin from '@/views/Admin.vue'
 import Create from '@/views/admin/Create.vue'
 import Update from '@/views/admin/Update.vue'
 import Delete from '@/views/admin/Delete.vue'
+import UserProfile from '@/views/UserProfile.vue'
 
 
 const routes = [
@@ -20,7 +21,7 @@ const routes = [
     }
   },
   {
-    path: '/search', name: 'search', component: SearchView,
+    path: '/search/:query', name: 'search', component: SearchView,
     meta: {
       requiresAuth: false
     }
@@ -63,6 +64,12 @@ const routes = [
   },
   {
     path: '/admin/delete/:id', name: 'delete', component: Delete,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/:user', name: 'userProfile', component: UserProfile,
     meta: {
       requiresAuth: true
     }

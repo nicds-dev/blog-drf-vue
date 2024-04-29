@@ -9,6 +9,9 @@ body {
     text-overflow: ellipsis;
     display: block;
 }
+.text-gray {
+    color: #595959 !important
+}
 @media (min-width:576px) {
     .title-column {
       max-width: 180px

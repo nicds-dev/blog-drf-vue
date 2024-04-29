@@ -12,21 +12,34 @@
         </div>
         <p class="fs-6 px-md-5 mb-5">{{ post.content }}</p>
         <div class="container px-md-5 py-5 border-top">
-            <h2 class="fs-4 text-secondary">Post by: <span class="text-dark fw-medium">{{ post.author_name }}</span></h2>
+            <h2 class="fs-4 text-secondary">
+                Post by: <a :href="`/${post.author_name}`" class="text-dark fw-medium">{{ post.author_name }}</a>
+            </h2>
             <p class="my-3 px-md-5 fst-italic text-secondary">"{{ post.author_bio }}"</p>
         </div>
+        <div class="px-md-5 py-5 text-center border-top">
+            <button @click="showComments" class="btn btn-primary fs-5">
+                Charge comments
+            </button>
+        </div>
+        <CommentList v-if="showingComments" :slug="post.slug" />
     </section>
 </template>
 
 <script setup>
-    import { useRoute } from 'vue-router'
+    import { useRoute, useRouter } from 'vue-router'
     import { ref, onMounted } from 'vue'
+    import { useAuthStore } from '@/stores/auth';
     import axiosInstance from '@/interceptors/axios'
+    import CommentList from '@/components/CommentList.vue'
 
+    const router = useRouter()
+    const { slug } = useRoute().params
+    const authStore = useAuthStore()
     const post = ref({})
+    const showingComments = ref(false)
 
     onMounted(() => {
-        const { slug } = useRoute().params
         axiosInstance.get(`post/${slug}`)
             .then((res) => {
                 post.value = res.data
@@ -36,6 +49,14 @@
                 console.error("Error during fetching post:", error)
             })
     })
+
+    const showComments = () => {
+        if (!authStore.user) {
+            router.push('/log-in')
+        } else {
+            showingComments.value = true
+        }
+    }
 
     const formatDate = (dateString) => {
         const date = new Date(dateString)

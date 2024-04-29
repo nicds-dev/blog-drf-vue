@@ -58,67 +58,31 @@
             </button>
           </form>
         </div>
-        <div v-if="router.currentRoute.value.name === 'home'" class="container py-3 border-top order-lg-2 order-1" style="max-width: 1200px">
-          <div class="offcanvas-body navbar-nav justify-content-center gap-4">
-            <button
-              class="nav-link fs-6"
-              v-for="category in categories"
-              :key="category.id"
-              @click="filterByCategory(category.id)"
-            >
-              {{ category.name }}
-            </button>
-            <button
-              class="nav-link fs-6"
-              @click="filterByCategory('')"
-            >
-              All
-            </button>
-          </div>
-        </div>
+        <CategoriesNavBar v-if="router.currentRoute.value.name === 'home'" />
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
+  import CategoriesNavBar from '@/components/CategoriesNavBar.vue'
   import { useRouter } from 'vue-router'
   import { useAuthStore } from '@/stores/auth'
-  import { usePostsStore } from '@/stores/posts'
-  import { ref, onMounted } from 'vue'
-  import axiosInstance from '@/interceptors/axios'
+  import { ref } from 'vue'
 
   const router = useRouter()
   const authStore = useAuthStore()
-  const categories = ref([])
-  const postsStore = usePostsStore()
   const searchText = ref('')
-  
-  onMounted(() => {
-    axiosInstance.get('categories/')
-      .then((res) => {
-        categories.value = res.data
-      })
-  })
 
   const goSearch = () => {
     if(searchText.value.trim() !== '') {
       router.push({ 
         path: '/search/',
-        query: { search: searchText.value }
+        name: 'search',
+        params: { query: searchText.value }
       })
       searchText.value = '';
     }
-  }
-
-  const filterByCategory = (categoryId) => {
-    axiosInstance.get(`search/?search=${categoryId}`)
-      .then((res) => {
-        postsStore.posts = res.data
-      })
-      .catch((error) => {
-        console.error('Error during fetching posts:', error)
-      })
   }
 </script>
   

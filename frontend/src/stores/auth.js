@@ -33,7 +33,8 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
-            const isAboutExpired = dayjs.unix(this.user.exp).diff(dayjs(), 'seconds') < 12 // 12 seconds before expiration
+            const isAboutExpired = dayjs.unix(this.user.exp).diff(dayjs(), 'seconds') < 45 // 15 seconds before expiration
+            console.log('expired: ', isAboutExpired, 'time left:', dayjs.unix(this.user.exp).diff(dayjs(), 'seconds'))
             // If the token is not about to expire, then logout
             if (!isAboutExpired) {
                 try {
